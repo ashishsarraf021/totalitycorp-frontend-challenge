@@ -14,8 +14,8 @@ A feature-rich full-stack course selling website using the MERN stack (Node.js, 
 
 # Live Links
 
-1. client-Admin : https://ashish-course-client.netlify.app
-2. client-User : https://ashish-course-admin.netlify.app
+1. client-User : https://ashish-course-client.netlify.app
+2. client-Admin : https://ashish-course-admin.netlify.app
 3. Server : https://course-selling-web-app-tau.vercel.app
 4. demo username : ashishsarraf075@gmail.com
 5. demo Password : ashishsarraf075@gmail.com
