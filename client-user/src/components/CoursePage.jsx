@@ -34,7 +34,7 @@ function CoursePage() {
     setIsLoading(true);
     axios
       .get(
-        `http://localhost:3000/users/courses/${id}`,
+        `https://course-selling-web-app-tau.vercel.app/users/courses/${id}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -49,7 +49,7 @@ function CoursePage() {
     // Fetch the purchased courses
     axios
       .get(
-        "http://localhost:3000/users/purchasedCourses",
+        "https://course-selling-web-app-tau.vercel.app/users/purchasedCourses",
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -125,7 +125,7 @@ function CoursePage() {
                 setIsLoading(true);
                 axios
                   .post(
-                    `http://localhost:3000/users/courses/${id}`,
+                    `https://course-selling-web-app-tau.vercel.app/users/courses/${id}`,
                     {},
                     {
                       headers: {

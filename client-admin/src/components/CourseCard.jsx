@@ -22,7 +22,7 @@ function CourseCard(props) {
     if (userInput === "DELETE") {
       axios
         .delete(
-          `http://localhost:3000/admin/courses/${id}`,
+          `https://course-selling-web-app-tau.vercel.app/admin/courses/${id}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),

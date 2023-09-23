@@ -8,7 +8,7 @@ function UpdateCourse() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/admin/courses/${courseId}`,
+      `https://course-selling-web-app-tau.vercel.app/admin/courses/${courseId}`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),

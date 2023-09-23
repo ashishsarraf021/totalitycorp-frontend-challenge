@@ -28,7 +28,7 @@ function LoginPage() {
       try {
         setIsLoading(true);
         const response = await axios.post(
-          "http://localhost:3000/admin/login",
+          "https://course-selling-web-app-tau.vercel.app/admin/login",
           {
             username: admin.email,
             password: admin.password,

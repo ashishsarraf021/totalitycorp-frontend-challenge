@@ -22,7 +22,7 @@ function CreateCourse(props) {
   }, [props.course]);
 
   function createCourse() {
-    fetch("http://localhost:3000/admin/courses", {
+    fetch("https://course-selling-web-app-tau.vercel.app/admin/courses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ function CreateCourse(props) {
   }
   function updateCourse() {
     fetch(
-      `http://localhost:3000/admin/courses/${props.course._id}`,
+      `https://course-selling-web-app-tau.vercel.app/admin/courses/${props.course._id}`,
       {
         method: "PUT",
         headers: {
