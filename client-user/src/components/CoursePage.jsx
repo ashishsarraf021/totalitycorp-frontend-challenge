@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -27,14 +27,18 @@ function CoursePage() {
   const { id } = useParams();
   const [course, setCourse] = useState({});
   const [purchasedCourses, setPurchasedCourses] = useState([]);
+  const [cartedCourses, setCartedCourses] = useState([]);
   const [isPurchased, setIsPurchased] = useState(false);
+  const [isAddedtocart, setIsAddedtocart] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
     axios
       .get(
-        `https://course-selling-web-app-tau.vercel.app/users/courses/${id}`,
+        `http://localhost:3000/users/courses/${id}`,
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -49,7 +53,7 @@ function CoursePage() {
     // Fetch the purchased courses
     axios
       .get(
-        "https://course-selling-web-app-tau.vercel.app/users/purchasedCourses",
+        "http://localhost:3000/users/purchasedCourses",
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -64,13 +68,58 @@ function CoursePage() {
         console.log(err);
         setIsLoading(false);
       });
+
+    // Fetch the carted courses
+    axios
+      .get(
+        "http://localhost:3000/users/cartCourses",
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        setCartedCourses(res.data.cartCourses);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [id]);
 
   useEffect(() => {
-    // Check if the current course is purchased
     const ans = purchasedCourses.some((item) => item._id === id);
     setIsPurchased(ans);
-  }, [id, purchasedCourses]);
+
+    const isAlreadyInCart = cartedCourses.some((item) => item._id === id);
+    setIsAddedtocart(isAlreadyInCart);
+  }, [id, purchasedCourses, cartedCourses]);
+
+  const addToCart = () => {
+    if (!isAddedtocart) {
+      setIsLoading(true);
+      axios
+        .post(
+          `http://localhost:3000/users/courses/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          toast.success(res.data.message);
+          setCartedCourses([...cartedCourses, res.data.cartCourse]);
+          setIsAddedtocart(true);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -111,48 +160,52 @@ function CoursePage() {
         </div>
 
         <div>
-          {!isPurchased ? (
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#bc1c44",
-                padding: "10px 20px",
-                fontWeight: "700",
-                fontSize: "1rem",
-                borderRadius: "50px",
-              }}
-              onClick={() => {
-                setIsLoading(true);
-                axios
-                  .post(
-                    `https://course-selling-web-app-tau.vercel.app/users/courses/${id}`,
-                    {},
-                    {
-                      headers: {
-                        Authorization:
-                          "Bearer " + localStorage.getItem("token"),
-                      },
-                    }
-                  )
-                  .then((res) => {
-                    toast.success(res.data.message);
-                    setPurchasedCourses([
-                      ...purchasedCourses,
-                      res.data.purchasedCourse,
-                    ]);
-                    setIsPurchased(true);
-                    setIsLoading(false);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                    setIsLoading(false);
-                  });
-              }}
-            >
-              BUY NOW @ ${course.price}
-            </Button>
-          ) : (
-            <div>
+          {
+            !isAddedtocart && !isPurchased ? (
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: "#bc1c44",
+                  padding: "10px 20px",
+                  fontWeight: "700",
+                  fontSize: "1rem",
+                  borderRadius: "50px",
+                }}
+                onClick={addToCart}
+              >
+                Add to Cart @ ${course.price}
+              </Button>
+            ) : isAddedtocart ? (
+              <div>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "green",
+                    padding: "10px 20px",
+                    fontWeight: "700",
+                    fontSize: "1rem",
+                    borderRadius: "50px",
+                  }}
+                >
+                  Added to cart
+                </Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#101460",
+                    padding: "10px 20px",
+                    fontWeight: "700",
+                    fontSize: "1rem",
+                    borderRadius: "50px",
+                    marginLeft: "20px",
+                  }}
+                  onClick={() => navigate("/courses/cartpage")}
+                >
+                  View Cart
+                </Button>
+              </div>
+            ) : (
+              <div>
               <Button
                 variant="contained"
                 style={{
@@ -163,23 +216,25 @@ function CoursePage() {
                   borderRadius: "50px",
                 }}
               >
-                Purchased
+                Already Purchased
               </Button>
               <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#101460",
-                  padding: "10px 20px",
-                  fontWeight: "700",
-                  fontSize: "1rem",
-                  borderRadius: "50px",
-                  marginLeft: "20px",
-                }}
-              >
-                View Content
-              </Button>
+              variant="contained"
+              style={{
+                backgroundColor: "#101460",
+                padding: "10px 20px",
+                fontWeight: "700",
+                fontSize: "1rem",
+                borderRadius: "50px",
+                marginLeft: "20px",
+              }}
+              onClick={() => navigate("/courses/purchased")}
+            >
+              my courses
+            </Button>
             </div>
-          )}
+            )
+            }
         </div>
       </div>
 

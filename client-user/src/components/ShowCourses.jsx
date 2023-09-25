@@ -20,7 +20,7 @@ function ShowCourses() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("https://course-selling-web-app-tau.vercel.app/users/courses/", {
+      .get("http://localhost:3000/users/courses/", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

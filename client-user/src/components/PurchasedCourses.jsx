@@ -17,7 +17,7 @@ function PurchasedCourses() {
     setIsLoading(true);
     axios
       .get(
-        "https://course-selling-web-app-tau.vercel.app/users/purchasedCourses",
+        "http://localhost:3000/users/purchasedCourses",
         {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),

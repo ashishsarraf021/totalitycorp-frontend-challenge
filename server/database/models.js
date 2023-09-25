@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String },
   password: String,
   purchasedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+  cartCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 });
 
 const adminSchema = new mongoose.Schema({

@@ -22,6 +22,7 @@ import Button from "@mui/material/Button";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import "./style.css";
 
 const drawerWidth = 240;
@@ -68,6 +69,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
+  backgroundColor: "#ADD8E6",
 }));
 
 const openState = atom({
@@ -219,6 +221,23 @@ export default function AppNavBar() {
                 <ShoppingBasketIcon />
               </ListItemIcon>
               <ListItemText primary={"Purchased Courses"} />
+            </ListItemButton>
+          </ListItem>
+        </List>
+
+         {/* Button to navigate to CartPage */}
+         <List>
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => {
+                handleDrawerClose();
+                navigate("/courses/cartpage"); // Adjust the route to CartPage as needed
+              }}
+            >
+              <ListItemIcon>
+                <LocalGroceryStoreIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Cart"} />
             </ListItemButton>
           </ListItem>
         </List>

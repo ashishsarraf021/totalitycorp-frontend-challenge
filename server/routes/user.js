@@ -4,6 +4,7 @@ const { SECRET, authenticateJwt } = require("../middleware/auth");
 const { User, Course } = require("../database/models");
 const z = require("zod");
 
+
 const router = express.Router();
 
 let signupProps = z.object({
@@ -73,11 +74,12 @@ router.post("/courses/:courseId", authenticateJwt, async (req, res) => {
   if (course) {
     const user = await User.findOne({ username: req.user.username });
     if (user) {
-      user.purchasedCourses.push(course);
+      // user.purchasedCourses.push(course);
+      user.cartCourses.push(course);
       await user.save();
       res.json({
-        message: "Course purchased successfully",
-        purchasedCourse: course,
+        message: "Course added to Cart successfully",
+        cartCourse: course,
       });
     } else {
       res.status(403).json({ message: "User not found" });
@@ -106,5 +108,67 @@ router.get("/purchasedCourses", authenticateJwt, async (req, res) => {
     res.status(403).json({ message: "User not found" });
   }
 });
+
+router.delete("/remove-from-cart/:courseId", authenticateJwt, async (req, res) => {
+  const courseId = req.params.courseId;
+  const user = await User.findOne({ username: req.user.username });
+
+  if (!user) {
+    return res.status(403).json({ message: "User not found" });
+  }
+
+  // Check if the course exists in the user's cart
+  const courseIndex = user.cartCourses.indexOf(courseId);
+
+  if (courseIndex === -1) {
+    return res.status(404).json({ message: "Course not found in cart" });
+  }
+
+  try {
+    // Remove the course from cartCourses
+    user.cartCourses.splice(courseIndex, 1);
+
+    await user.save();
+
+    return res.json({ message: "Course removed from cart successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+router.get("/cartCourses", authenticateJwt, async (req, res) => {
+  const user = await User.findOne({ username: req.user.username }).populate(
+    "cartCourses"
+  );
+  if (user) {
+    res.json({ cartCourses: user.cartCourses || [] });
+  } else {
+    res.status(403).json({ message: "User not found" });
+  }
+});
+
+
+// Route to move all cart courses to purchased courses
+router.post("/purchase-cart-courses", authenticateJwt, async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.user.username });
+
+    if (!user) {
+      return res.status(403).json({ message: "User not found" });
+    }
+    user.purchasedCourses.push(...user.cartCourses);
+    user.cartCourses = []; 
+
+    await user.save();
+
+    res.json({ message: "All cart courses moved to purchased courses" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
 
 module.exports = router;
