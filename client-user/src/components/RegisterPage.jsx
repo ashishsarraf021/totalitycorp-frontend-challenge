@@ -28,7 +28,7 @@ function RegisterPage() {
       try {
         setIsLoading(true);
         const response = await axios.post(
-          "http://localhost:3000/users/signup",
+          "https://course-selling-web-app-tau.vercel.app/users/signup",
           {
             username: user.email,
             password: user.password,

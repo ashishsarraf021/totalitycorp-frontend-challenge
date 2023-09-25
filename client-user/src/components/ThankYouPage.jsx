@@ -1,5 +1,4 @@
 import React from "react";
-// import { navigate } from "@reach/router";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";

@@ -17,7 +17,7 @@ function CourseCardCart(props) {
 
   const handleRemoveFromCart = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/users/remove-from-cart/${props.course._id}`, {
+      const response = await fetch(`https://course-selling-web-app-tau.vercel.app/users/remove-from-cart/${props.course._id}`, {
         method: "DELETE",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),

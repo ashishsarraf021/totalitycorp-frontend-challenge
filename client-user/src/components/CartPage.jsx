@@ -21,7 +21,7 @@ function CartPage() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("http://localhost:3000/users/cartCourses", {
+      .get("https://course-selling-web-app-tau.vercel.app/users/cartCourses", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -43,7 +43,7 @@ function CartPage() {
   const handlePayment = async () => {
     try {
       // Make a POST request to the /purchase-cart-courses route
-      await axios.post("http://localhost:3000/users/purchase-cart-courses", {}, {
+      await axios.post("https://course-selling-web-app-tau.vercel.app/users/purchase-cart-courses", {}, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
